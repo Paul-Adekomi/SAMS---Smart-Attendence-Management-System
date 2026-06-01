@@ -1,0 +1,44 @@
+[
+    {
+        "fullName": "Dr. John O. Doe",
+        "email": "johndoe@gmail.com",
+        "lecturerId": "LEC001",
+        "password": "0000",
+        "department": "Computer Science"
+    },
+    {
+        "fullName": "Dr. Helen S. Kyle",
+        "email": "helenkyle@gmail.com",
+        "lecturerId": "LEC002",
+        "password": "1111",
+        "department": "Electrical Engineering"
+    },
+    {
+        "fullName": "Dr. Bolaji A. Oyedele",
+        "email": "bolajioyedele@gmail.com",
+        "lecturerId": "LEC003",
+        "password": "2222",
+        "department": "Mechanical Engineering"
+    },
+    {
+        "fullName": "Dr. Remi Johnson",
+        "email": "remijohnson@gmail.com",
+        "lecturerId": "LEC004",
+        "password": "3333",
+        "department": "Computer Science"
+    },
+    {
+        "fullName": "Dr. Seyi Toluwani",
+        "email": "seyitoluwani@gmail.com",
+        "lecturerId": "LEC005",
+        "password": "4444",
+        "department": "Mechanical Engineering"
+    },
+    {
+        "fullName": "Dr. Chiamaka Okeke",
+        "email": "okekechiamaka@gmail.com",
+        "lecturerId": "LEC006",
+        "password": "5555",
+        "department": "Electrical Engineering"
+    }
+]

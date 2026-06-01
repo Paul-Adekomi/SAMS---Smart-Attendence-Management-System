@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@theme{
+    --color-primary: #5048e5;
+    --color-light: #f6f6f8;
+    --color-dark: #121121;
+    --color-light-purple-alt: #d5d3ff;
+    --font-galano: "Galano Grotesque Alt";
+}
+.btn{
+    background: #5048e5;
+    box-shadow: 0 2px 2px 2px #3d37b1;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.5s;
+
+    &:hover{
+        background: #8681ee;
+        transition: all 0.5s;
+    }
+    &:active{
+        transform: scale(0.8);
+    }
+}
+
+.card{
+    @apply w-[80%] md:w-[25%] h-64 p-4 px-8 flex items-start justify-center flex-col gap-5 rounded-2xl bg-gray-100;
+    box-shadow:  0 5px 10px 0 rgba(77, 76, 76, 0.219);
+
+    & > .icon{
+        @apply w-10 h-10 bg-light-purple-alt flex items-center justify-center rounded-md;
+    }
+
+    & > h3{
+        @apply text-[1.2rem] font-bold;
+    }
+}

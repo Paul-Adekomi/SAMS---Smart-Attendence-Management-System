@@ -1,0 +1,44 @@
+[
+    {
+        "fullName": "Joy Ndu",
+        "email": "joyndu@gmail.com",
+        "matricNo": "STU1001",
+        "password": "000000",
+        "department": "Computer Science"
+    },
+    {
+        "fullName": "John Doe",
+        "email": "johndoe@gmail.com",
+        "matricNo": "STU1002",
+        "password": "11111111",
+        "department": "Electrical Engineering"
+    },
+    {
+        "fullName": "Samuel David",
+        "email": "samueldavid@gmail.com",
+        "matricNo": "STU1003",
+        "password": "222222",
+        "department": "Mechanical Engineering"
+    },
+    {
+        "fullName": "James Opeyemi",
+        "email": "jamesope@gmail.com",
+        "matricNo": "STU1004",
+        "password": "333333",
+        "department": "Computer Science"
+    },
+    {
+        "fullName": "Olubukola Daves",
+        "email": "bukoladaves@gmail.com",
+        "matricNo": "STU1005",
+        "password": "444444",
+        "department": "Electrical Engineering"
+    },
+    {
+        "fullName": "Chidubem Okemadu",
+        "email": "chidubemmadu@gmail.com",
+        "matricNo": "STU1006",
+        "password": "555555",
+        "department": "Mechanical Engineering"
+    }
+]

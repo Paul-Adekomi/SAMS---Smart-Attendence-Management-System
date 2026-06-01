@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Computer Science",
+        "faculty": "School of Technology",
+        "description": "CS Department"
+    },
+    {
+        "name": "Electrical Engineering",
+        "faculty": "School of Engineering",
+        "description": "EE Department"
+    },
+    {
+        "name": "Mechanical Engineering",
+        "faculty": "School of Engineering",
+        "description": "ME Department"
+    }
+]

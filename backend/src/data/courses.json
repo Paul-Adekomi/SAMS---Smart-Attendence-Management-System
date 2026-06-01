@@ -1,0 +1,110 @@
+[
+    {
+        "courseTitle": "Introduction to Programming",
+        "courseCode": "CSC101",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Computer Science",
+        "lecturerId": "LEC001"
+    },
+    {
+        "courseTitle": "Data Structures & Algorithms",
+        "courseCode": "CSC102",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "second",
+        "department": "Computer Science",
+        "lecturerId": "LEC001"
+    },
+    {
+        "courseTitle": "Circuit Theory",
+        "courseCode": "EEE101",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Electrical Engineering",
+        "lecturerId": "LEC002"
+    },
+    {
+        "courseTitle": "Digital Systems",
+        "courseCode": "EEE201",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Electrical Engineering",
+        "lecturerId": "LEC002"
+    },
+    {
+        "courseTitle": "Motion Theory",
+        "courseCode": "MEE102",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "second",
+        "department": "Mechanical Engineering",
+        "lecturerId": "LEC003"
+    },
+    {
+        "courseTitle": "Machine Design",
+        "courseCode": "MEC301",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Mechanical Engineering",
+        "lecturerId": "LEC003"
+    },
+    {
+        "courseTitle": "Operating Systems",
+        "courseCode": "CSC301",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Computer Science",
+        "lecturerId": "LEC004"
+    },
+    {
+        "courseTitle": "Database Systems",
+        "courseCode": "CSC201",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Computer Science",
+        "lecturerId": "LEC004"
+    },
+    {
+        "courseTitle": "Material Science",
+        "courseCode": "MEC202",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Mechanical Engineering",
+        "lecturerId": "LEC005"
+    },
+    {
+        "courseTitle": "Thermodynamics",
+        "courseCode": "MEC102",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Mechanical Engineering",
+        "lecturerId": "LEC005"
+    },
+    {
+        "courseTitle": "Control Systems",
+        "courseCode": "EEE202",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Electrical Engineering",
+        "lecturerId": "LEC006"
+    },
+    {
+        "courseTitle": "Power Systems",
+        "courseCode": "EEE301",
+        "creditUnit": 3,
+        "level": ["ND3"],
+        "semester": "first",
+        "department": "Electrical Engineering",
+        "lecturerId": "LEC006"
+    }
+]
