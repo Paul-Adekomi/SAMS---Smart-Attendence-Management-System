@@ -185,6 +185,21 @@ function LecturerDashboard() {
           ))}
         </aside>
 
+         {/* Mobile bottom bar */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] flex z-40">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id as "home" || "session"); setSelectedReport(null); }}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === tab.id ? "bg-primary text-white" : "text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              <span>{tab.icon}</span> {tab.label}
+            </button>
+          ))}
+        </div>
+
         <main className="flex-1 md:ml-56 p-6 md:p-10">
           {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-2 rounded-xl mb-4">{error}</p>}
 
