@@ -7,11 +7,13 @@ import { Department } from "../models/department.model";
 import { Course } from "../models/course.model";
 import { Lecturer } from "../models/lecturer.model";
 import { Student } from "../models/student.model";
+import { Admin } from "../models/admin.model";
 
 import departmentsData from '../data/departments.json';
 import coursesData from '../data/courses.json';
 import lecturersData from '../data/lecturers.json';
 import studentsData from '../data/students.json';
+import adminsData from '../data/admins.json';
 
 dotenv.config();
 
@@ -80,6 +82,24 @@ export const seedDatabase = async () => {
 
         }
         console.log("🌱 Lecturers seeded✅");
+
+        for (const adm of adminsData) {
+            const hashedPassword = await bcrypt.hash(adm.password, 10);
+
+            await Admin.updateOne(
+                { adminId: adm.adminId },
+                {
+                    $set: {
+                        fullName: adm.fullName,
+                        email: adm.email,
+                        password: hashedPassword,
+                        adminId: adm.adminId,
+                    }
+                },
+                { upsert: true }
+            );
+        }
+        console.log("🌱 Admins seeded✅");
 
         for (const course of coursesData) {
             const department = await Department.findOne({

@@ -1,0 +1,26 @@
+{
+  "department": {
+    "name": "COMPUTER SCIENCE",
+    "faculty": "TECHNOLOGY",
+    "description": ""
+  },
+  "admin": {
+    "fullName": "MRS ISHOLA, P.E",
+    "adminId": "ADM001",
+    "password": "123456"
+  },
+  "lecturer": {
+    "fullName": "MRS ISHOLA, P.E",
+    "lecturerId": "LEC001",
+    "password": "123456"
+  },
+  "courses": [
+    {
+      "courseCode": "CSC301",
+      "courseTitle": "Web Technology",
+      "creditUnit": 3,
+      "semester": "first",
+      "level": ["300"]
+    }
+  ]
+}

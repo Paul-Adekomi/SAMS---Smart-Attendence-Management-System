@@ -7,6 +7,7 @@ export interface IStudent {
     matricNo: string;
     department: mongoose.Types.ObjectId;
     role: 'student';
+    isActive: boolean;
 }
 
 const studentSchema = new mongoose.Schema<IStudent>({
@@ -36,6 +37,10 @@ const studentSchema = new mongoose.Schema<IStudent>({
     role: {
         type: String,
         default: 'student'
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 

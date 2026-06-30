@@ -8,6 +8,7 @@ import studentRoutes from './routes/student.routes';
 import lecturerRoutes from './routes/lecturer.routes';
 import attendanceRoutes from './routes/attendance.routes';
 import sessionRoutes from './routes/session.routes';
+import adminRoutes from './routes/admin.routes';
 
 dotenv.config();
 connectDB();
@@ -24,6 +25,7 @@ app.use('/api/students/', studentRoutes);
 app.use('/api/lecturers/', lecturerRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));

@@ -4,9 +4,10 @@ interface User {
   id: string;
   fullName: string;
   email: string;
-  role: "student" | "lecturer";
+  role: "student" | "lecturer" | "admin";
   matricNo?: string;
   lecturerId?: string;
+  adminId?: string;
   department?: string;
 }
 

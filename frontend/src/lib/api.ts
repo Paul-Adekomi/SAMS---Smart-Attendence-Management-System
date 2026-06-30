@@ -26,6 +26,34 @@ export const loginStudent = (matricNo: string, password: string) =>
 export const loginLecturer = (lecturerId: string, password: string) =>
   API.post("/lecturers/login", { lecturerId, password });
 
+export const loginAdmin = (adminId: string, password: string) =>
+  API.post("/admin/login", { adminId, password });
+
+// Admin
+export const getDepartments = () => API.get("/admin/departments");
+export const getCoursesByDepartment = (departmentId: string) =>
+  API.get(`/admin/departments/${departmentId}/courses`);
+export const getAllStudents = () => API.get("/admin/students");
+export const createStudent = (data: {
+  fullName: string;
+  email: string;
+  matricNo: string;
+  password: string;
+  departmentId: string;
+}) => API.post("/admin/students", data);
+export const deleteStudent = (id: string) => API.delete(`/admin/students/${id}`);
+export const getWeeklyReport = (
+  from: string,
+  to: string,
+  departmentId: string,
+  courseId?: string
+) =>
+  API.get(
+    `/admin/reports/weekly?from=${from}&to=${to}&departmentId=${departmentId}${
+      courseId ? `&courseId=${courseId}` : ""
+    }`
+  );
+
 // Lecturer
 export const getMyCourses = () => API.get("/sessions/my-courses");
 export const createSession = (courseId: string, duration: number) =>

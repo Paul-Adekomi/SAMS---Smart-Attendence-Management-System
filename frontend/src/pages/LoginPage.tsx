@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { FaGraduationCap, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { loginStudent, loginLecturer } from "../lib/api";
+import { loginStudent, loginLecturer, loginAdmin } from "../lib/api";
 
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState<"lecturer" | "student">("student");
+  const [role, setRole] = useState<"lecturer" | "student" | "admin">("student");
   const [form, setForm] = useState({ id: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,11 +26,16 @@ function Login() {
         sessionStorage.setItem("sams_token", res.data.token);
         sessionStorage.setItem("sams_user", JSON.stringify({ ...res.data.student, role: "student" }));
         navigate("/student");
-      } else {
+      } else if (role === "lecturer") {
         res = await loginLecturer(form.id, form.password);
         sessionStorage.setItem("sams_token", res.data.token);
         sessionStorage.setItem("sams_user", JSON.stringify({ ...res.data.lecturer, role: "lecturer" }));
         navigate("/lecturer");
+      } else {
+        res = await loginAdmin(form.id, form.password);
+        sessionStorage.setItem("sams_token", res.data.token);
+        sessionStorage.setItem("sams_user", JSON.stringify({ ...res.data.admin, role: "admin" }));
+        navigate("/admin");
       }
     } catch (err: unknown) {
       if (err instanceof Error){
@@ -58,7 +63,7 @@ function Login() {
 
         {/* Role Toggle */}
         <div className="flex w-full bg-gray-100 rounded-xl p-1">
-          {(["student", "lecturer"] as const).map((r) => (
+          {(["student", "lecturer", "admin"] as const).map((r) => (
             <button
               key={r}
               onClick={() => { setRole(r); setForm({ id: "", password: "" }); setError(""); }}
@@ -66,7 +71,7 @@ function Login() {
                 role === r ? "bg-primary text-white shadow" : "text-gray-500 hover:text-dark"
               }`}
             >
-              {r === "student" ? "Student" : "Lecturer"}
+              {r === "student" ? "Student" : r === "lecturer" ? "Lecturer" : "Admin"}
             </button>
           ))}
         </div>
@@ -74,11 +79,11 @@ function Login() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-dark">
-              {role === "student" ? "Matric Number" : "Lecturer ID"}
+              {role === "student" ? "Matric Number" : role === "lecturer" ? "Lecturer ID" : "Admin ID"}
             </label>
             <input
               type="text"
-              placeholder={role === "student" ? "e.g. STU1001" : "e.g. LEC001"}
+              placeholder={role === "student" ? "e.g. STU1001" : role === "lecturer" ? "e.g. LEC001" : "e.g. ADM001"}
               value={form.id}
               onChange={(e) => setForm({ ...form, id: e.target.value })}
               className="border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"

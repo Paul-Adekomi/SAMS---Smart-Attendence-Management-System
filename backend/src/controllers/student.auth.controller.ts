@@ -25,6 +25,10 @@ export const loginStudent = async (req: Request, res: Response) => {
             return res.status(400).json({message: 'Invalid credentials or student does not exists'});
         }
 
+        if (student.isActive === false) {
+            return res.status(403).json({message: 'This account has been deactivated. Contact your administrator.'});
+        }
+
         const isMatch = await bcrypt.compare(password, student.password);
 
         if (!isMatch) {

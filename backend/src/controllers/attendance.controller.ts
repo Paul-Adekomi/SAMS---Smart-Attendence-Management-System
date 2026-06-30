@@ -18,13 +18,18 @@ export const markAttendance = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "SessionID and code are required" });
     }
 
-    const session = await Session.findById(sessionId) as any;
+    const session = await Session.findById(sessionId).populate("course") as any;
     if (!session) return res.status(404).json({ message: "Session not found" });
     if (new Date() > session.expiresAt) return res.status(400).json({ message: "Attendance session expired" });
     if (session.code !== code) return res.status(400).json({ message: "Invalid attendance code" });
 
     const student = await Student.findById(req.user.id);
     if (!student) return res.status(400).json({ message: "Student not found" });
+
+    const courseDepartment = session.course?.department?.toString();
+    if (courseDepartment && student.department?.toString() !== courseDepartment) {
+      return res.status(403).json({ message: "This session is not for your department" });
+    }
 
     const alreadyMarked = await Attendance.findOne({ student: req.user.id, session: sessionId });
     if (alreadyMarked) return res.status(400).json({ message: "Attendance already marked" });
