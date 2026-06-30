@@ -45,7 +45,6 @@ export const seedDatabase = async () => {
                 {
                     $set: {
                         fullName: stu.fullName,
-                        email: stu.email,
                         password: hashedPassword,
                         matricNo: stu.matricNo,
                         department: department._id,
@@ -71,7 +70,6 @@ export const seedDatabase = async () => {
                 {
                     $set: {
                         fullName: lec.fullName,
-                        email: lec.email,
                         password: hashedPassword,
                         lecturerId: lec.lecturerId,
                         department: department._id,
@@ -91,7 +89,6 @@ export const seedDatabase = async () => {
                 {
                     $set: {
                         fullName: adm.fullName,
-                        email: adm.email,
                         password: hashedPassword,
                         adminId: adm.adminId,
                     }
