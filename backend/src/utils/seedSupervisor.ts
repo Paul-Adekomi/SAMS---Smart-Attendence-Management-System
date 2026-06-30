@@ -32,7 +32,6 @@ export const seedSupervisor = async () => {
       {
         $set: {
           fullName: setup.admin.fullName,
-          email: setup.admin.email,
           password: hashedAdminPassword,
           adminId: setup.admin.adminId,
         },
@@ -47,7 +46,6 @@ export const seedSupervisor = async () => {
       {
         $set: {
           fullName: setup.lecturer.fullName,
-          email: setup.lecturer.email,
           password: hashedLecturerPassword,
           lecturerId: setup.lecturer.lecturerId,
           department: department._id,
