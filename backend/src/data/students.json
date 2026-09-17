@@ -3,36 +3,42 @@
         "fullName": "Joy Ndu",
         "matricNo": "STU1001",
         "password": "000000",
-        "department": "Computer Science"
+        "department": "Computer Science",
+        "email": "joy.ndu@sams.edu"
     },
     {
         "fullName": "John Doe",
         "matricNo": "STU1002",
         "password": "11111111",
-        "department": "Electrical Engineering"
+        "department": "Electrical Engineering",
+        "email": "john.doe@sams.edu"
     },
     {
         "fullName": "Samuel David",
         "matricNo": "STU1003",
         "password": "222222",
-        "department": "Mechanical Engineering"
+        "department": "Mechanical Engineering",
+        "email": "samuel.david@sams.edu"
     },
     {
         "fullName": "James Opeyemi",
         "matricNo": "STU1004",
         "password": "333333",
-        "department": "Computer Science"
+        "department": "Computer Science",
+        "email": "james.opeyemi@sams.edu"
     },
     {
         "fullName": "Olubukola Daves",
         "matricNo": "STU1005",
         "password": "444444",
-        "department": "Electrical Engineering"
+        "department": "Electrical Engineering",
+        "email": "olubukola.daves@sams.edu"
     },
     {
         "fullName": "Chidubem Okemadu",
         "matricNo": "STU1006",
         "password": "555555",
-        "department": "Mechanical Engineering"
+        "department": "Mechanical Engineering",
+        "email": "chidubem.okemadu@sams.edu"
     }
 ]

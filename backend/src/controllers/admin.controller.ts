@@ -10,7 +10,7 @@ export interface AuthRequest extends Request {
   user?: any;
 }
 
-// ─── DEPARTMENTS (for the create-student dropdown) ─────────
+// ─── DEPARTMENTS ─────────────────────────────────────────
 export const getDepartments = async (_req: AuthRequest, res: Response) => {
   try {
     const departments = await Department.find().sort({ name: 1 });
@@ -20,7 +20,7 @@ export const getDepartments = async (_req: AuthRequest, res: Response) => {
   }
 };
 
-// ─── COURSES (scoped by department, for the report drill-down) ───
+// ─── COURSES ─────────────────────────────────────────────
 export const getCoursesByDepartment = async (req: AuthRequest, res: Response) => {
   try {
     const { departmentId } = req.params;
@@ -28,6 +28,45 @@ export const getCoursesByDepartment = async (req: AuthRequest, res: Response) =>
     res.json(courses);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllCourses = async (_req: AuthRequest, res: Response) => {
+  try {
+    const courses = await Course.find().populate("department").sort({ courseCode: 1 });
+    res.json(courses);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const createCourse = async (req: AuthRequest, res: Response) => {
+  try {
+    const { courseTitle, courseCode, departmentId, creditUnit, semester, level, description } = req.body;
+
+    if (!courseTitle || !courseCode || !departmentId || !creditUnit || !semester || !level) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const department = await Department.findById(departmentId);
+    if (!department) return res.status(404).json({ message: "Department not found" });
+
+    const existing = await Course.findOne({ courseCode: String(courseCode).toUpperCase() });
+    if (existing) return res.status(400).json({ message: "A course with this code already exists" });
+
+    const course = await Course.create({
+      courseTitle,
+      courseCode,
+      description,
+      creditUnit,
+      semester,
+      level: Array.isArray(level) ? level : [level],
+      department: department._id,
+    });
+
+    return res.status(201).json({ message: "Course created", course });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -78,6 +117,47 @@ export const createStudent = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const updateStudent = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { fullName, email, matricNo, departmentId, isActive, password } = req.body;
+
+    const student = await Student.findById(id);
+    if (!student) return res.status(404).json({ message: "Student not found" });
+
+    if (email || matricNo) {
+      const existing = await Student.findOne({
+        _id: { $ne: id },
+        $or: [...(email ? [{ email }] : []), ...(matricNo ? [{ matricNo }] : [])],
+      });
+      if (existing) {
+        return res.status(400).json({ message: "Another student already uses this email or matric number" });
+      }
+    }
+
+    if (departmentId) {
+      const department = await Department.findById(departmentId);
+      if (!department) return res.status(404).json({ message: "Department not found" });
+      student.department = department._id as any;
+    }
+
+    if (fullName) student.fullName = fullName;
+    if (email) student.email = email;
+    if (matricNo) student.matricNo = matricNo;
+    if (typeof isActive === "boolean") student.isActive = isActive;
+    if (password) student.password = await bcrypt.hash(password, 10);
+
+    await student.save();
+
+    return res.json({
+      message: "Student updated",
+      student: { ...student.toObject(), password: undefined },
+    });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // Soft delete — keeps attendance history intact, just blocks login & hides from active lists
 export const deleteStudent = async (req: AuthRequest, res: Response) => {
   try {
@@ -95,7 +175,40 @@ export const deleteStudent = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// ─── WEEKLY ATTENDANCE REPORT (across all lecturers/courses) ───
+// A single student's full attendance history (used for the admin's "search a student" drill-down)
+export const getStudentAttendanceHistory = async (req: AuthRequest, res: Response) => {
+  try {
+    const { studentId } = req.params;
+
+    const student = await Student.findById(studentId).populate("department");
+    if (!student) return res.status(404).json({ message: "Student not found" });
+
+    const records = await Attendance.find({ student: studentId })
+      .populate({ path: "session", populate: { path: "course" } })
+      .sort({ createdAt: -1 });
+
+    const history = records.map((r: any) => ({
+      recordId: r._id,
+      status: r.status,
+      date: r.createdAt,
+      courseCode: r.session?.course?.courseCode || "—",
+      courseTitle: r.session?.course?.courseTitle || "Unknown course",
+    }));
+
+    const presentCount = history.filter((h) => h.status === "present").length;
+
+    return res.json({
+      student: { _id: student._id, fullName: student.fullName, matricNo: student.matricNo, department: student.department },
+      totalRecords: history.length,
+      presentCount,
+      history,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// ─── WEEKLY ATTENDANCE REPORT (across all courses) ──────
 export const getWeeklyReport = async (req: AuthRequest, res: Response) => {
   try {
     const { from, to, departmentId, courseId } = req.query as {
@@ -132,7 +245,6 @@ export const getWeeklyReport = async (req: AuthRequest, res: Response) => {
       course: { $in: scopedCourseIds },
     })
       .populate("course")
-      .populate("lecturer")
       .sort({ createdAt: 1 }) as any[];
 
     const rows = await Promise.all(
@@ -146,7 +258,6 @@ export const getWeeklyReport = async (req: AuthRequest, res: Response) => {
           date: session.createdAt,
           courseCode: session.course?.courseCode || "—",
           courseTitle: session.course?.courseTitle || "Unknown course",
-          lecturerName: session.lecturer?.fullName || "Unknown lecturer",
           presentCount,
         };
       })

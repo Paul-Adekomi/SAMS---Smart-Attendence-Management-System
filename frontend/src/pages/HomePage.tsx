@@ -70,9 +70,9 @@ function Home() {
         <h2 className="text-4xl md:text-5xl text-center font-bold">How it works</h2>
         <div className="w-full h-[80%] flex items-center justify-center flex-col px-5 gap-18 mt-10 md:mt-0">
           {[
-            { step: 1, title: "Lecturer creates session", desc: "Select the course, unit and room. The system generates a secure, dynamic QR code instantly." },
+            { step: 1, title: "Admin starts a session", desc: "Select the course and duration. The system generates a secure, dynamic QR code instantly." },
             { step: 2, title: "Students scan QR or enter code", desc: "Students open the SAMS portal on their phones to scan the displayed QR or enter a manual session pin/code." },
-            { step: 3, title: "Attendance live updates", desc: "The lecturer's dashboard populates immediately. No more physical sheets or manual entry later." },
+            { step: 3, title: "Attendance live updates", desc: "The admin dashboard populates immediately, and can be corrected manually at any time. No more physical sheets." },
           ].map(({ step, title, desc }) => (
             <div key={step} className="flex items-start justify-center flex-col md:flex-row gap-3 md:gap-8 w-full">
               <span className="w-10 h-10 bg-primary text-white font-bold flex items-center justify-center rounded-full md:mt-2">{step}</span>

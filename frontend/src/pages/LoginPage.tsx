@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { FaGraduationCap, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { loginStudent, loginLecturer, loginAdmin } from "../lib/api";
+import { loginStudent, loginAdmin } from "../lib/api";
+import { inputClass, labelClass } from "../lib/ui";
+import Alert from "../components/ui/Alert";
 
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState<"lecturer" | "student" | "admin">("student");
+  const [role, setRole] = useState<"student" | "admin">("student");
   const [form, setForm] = useState({ id: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,11 +28,6 @@ function Login() {
         sessionStorage.setItem("sams_token", res.data.token);
         sessionStorage.setItem("sams_user", JSON.stringify({ ...res.data.student, role: "student" }));
         navigate("/student");
-      } else if (role === "lecturer") {
-        res = await loginLecturer(form.id, form.password);
-        sessionStorage.setItem("sams_token", res.data.token);
-        sessionStorage.setItem("sams_user", JSON.stringify({ ...res.data.lecturer, role: "lecturer" }));
-        navigate("/lecturer");
       } else {
         res = await loginAdmin(form.id, form.password);
         sessionStorage.setItem("sams_token", res.data.token);
@@ -38,11 +35,7 @@ function Login() {
         navigate("/admin");
       }
     } catch (err: unknown) {
-      if (err instanceof Error){
-        setError(err.message)
-      }else{
-        setError("Login failed. Please try again")
-      }
+      setError(err instanceof Error ? err.message : "Login failed. Please try again");
     } finally {
       setLoading(false);
     }
@@ -63,7 +56,7 @@ function Login() {
 
         {/* Role Toggle */}
         <div className="flex w-full bg-gray-100 rounded-xl p-1">
-          {(["student", "lecturer", "admin"] as const).map((r) => (
+          {(["student", "admin"] as const).map((r) => (
             <button
               key={r}
               onClick={() => { setRole(r); setForm({ id: "", password: "" }); setError(""); }}
@@ -71,33 +64,33 @@ function Login() {
                 role === r ? "bg-primary text-white shadow" : "text-gray-500 hover:text-dark"
               }`}
             >
-              {r === "student" ? "Student" : r === "lecturer" ? "Lecturer" : "Admin"}
+              {r === "student" ? "Student" : "Admin"}
             </button>
           ))}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-dark">
-              {role === "student" ? "Matric Number" : role === "lecturer" ? "Lecturer ID" : "Admin ID"}
+            <label className={labelClass}>
+              {role === "student" ? "Matric Number" : "Admin ID"}
             </label>
             <input
               type="text"
-              placeholder={role === "student" ? "e.g. STU1001" : role === "lecturer" ? "e.g. LEC001" : "e.g. ADM001"}
+              placeholder={role === "student" ? "e.g. STU1001" : "e.g. ADM001"}
               value={form.id}
               onChange={(e) => setForm({ ...form, id: e.target.value })}
-              className="border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"
+              className={inputClass}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-dark">Password</label>
+            <label className={labelClass}>Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors pr-12"
+                className={`${inputClass} w-full pr-12`}
               />
               <button
                 type="button"
@@ -108,7 +101,7 @@ function Login() {
               </button>
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+          <Alert type="error" message={error} />
           <button
             type="submit"
             disabled={loading}
@@ -116,6 +109,11 @@ function Login() {
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
+          {role === "student" && (
+            <p className="text-xs text-gray-400 text-center">
+              New student? You'll need a registration link from your admin.
+            </p>
+          )}
         </form>
       </div>
     </div>

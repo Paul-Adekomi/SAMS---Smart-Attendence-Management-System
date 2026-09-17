@@ -7,7 +7,8 @@ import {
 } from "react-icons/fa";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import API, { markAttendance, getMyAttendance } from "../lib/api";
+import { markAttendance, getMyAttendance, getSessionByCode } from "../lib/api";
+import Alert from "../components/ui/Alert";
 
 type AttendanceRecord = {
   _id: string;
@@ -65,7 +66,7 @@ function StudentDashboard() {
     try {
       let resolvedSessionId = sessionId;
       if (!resolvedSessionId) {
-        const res = await API.post("/sessions/by-code", { code: pin.trim() });
+        const res = await getSessionByCode(pin.trim());
         resolvedSessionId = res.data.sessionId;
       }
       await markAttendance(resolvedSessionId, pin.trim());
@@ -265,7 +266,7 @@ function StudentDashboard() {
                   Mark Attendance
                 </h1>
                 <p className="text-gray-500 mt-1 text-sm">
-                  Enter the session PIN given by your lecturer.
+                  Enter the session PIN given by your admin.
                 </p>
               </div>
 
@@ -298,7 +299,7 @@ function StudentDashboard() {
                     <div className="flex flex-col items-center gap-3">
                       <FaQrcode className="text-primary text-5xl" />
                       <p className="text-sm text-gray-400 text-center">
-                        Enter the session PIN from your lecturer. If you scanned
+                        Enter the session PIN from your admin. If you scanned
                         the QR code, fields are pre-filled.
                       </p>
                     </div>
@@ -336,11 +337,7 @@ function StudentDashboard() {
                       />
                     </div>
 
-                    {submitState === "error" && (
-                      <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">
-                        {errorMsg}
-                      </p>
-                    )}
+                    {submitState === "error" && <Alert type="error" message={errorMsg} />}
 
                     <button
                       type="submit"

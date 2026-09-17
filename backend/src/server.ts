@@ -5,10 +5,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/db';
 import studentRoutes from './routes/student.routes';
-import lecturerRoutes from './routes/lecturer.routes';
 import attendanceRoutes from './routes/attendance.routes';
 import sessionRoutes from './routes/session.routes';
 import adminRoutes from './routes/admin.routes';
+import publicRoutes from './routes/public.routes';
 
 dotenv.config();
 connectDB();
@@ -22,10 +22,10 @@ app.use(cors({
 }));
 
 app.use('/api/students/', studentRoutes);
-app.use('/api/lecturers/', lecturerRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/public', publicRoutes);
 
 // Health check
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));

@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 
 import { Department } from "../models/department.model";
 import { Course } from "../models/course.model";
-import { Lecturer } from "../models/lecturer.model";
 import { Admin } from "../models/admin.model";
 
 import setup from "../data/supervisor-setup.json";
@@ -12,8 +11,8 @@ import setup from "../data/supervisor-setup.json";
 dotenv.config();
 
 // Seeds ONLY real data for her instance: her department, her admin account,
-// her lecturer account, and the courses she teaches.
-// Does NOT touch students — she creates those herself through the Admin dashboard.
+// and the courses she runs. Does NOT touch students — she creates those
+// herself through the Admin dashboard, or via a registration link.
 export const seedSupervisor = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI as string);
@@ -40,21 +39,6 @@ export const seedSupervisor = async () => {
     );
     console.log("🌱 Admin account seeded ✅");
 
-    const hashedLecturerPassword = await bcrypt.hash(setup.lecturer.password, 10);
-    const lecturer = await Lecturer.findOneAndUpdate(
-      { lecturerId: setup.lecturer.lecturerId },
-      {
-        $set: {
-          fullName: setup.lecturer.fullName,
-          password: hashedLecturerPassword,
-          lecturerId: setup.lecturer.lecturerId,
-          department: department._id,
-        },
-      },
-      { upsert: true, new: true }
-    );
-    console.log("🌱 Lecturer account seeded ✅");
-
     for (const course of setup.courses) {
       await Course.updateOne(
         { courseCode: course.courseCode },
@@ -65,7 +49,6 @@ export const seedSupervisor = async () => {
             semester: course.semester,
             level: course.level,
             department: department._id,
-            lecturer: lecturer._id,
           },
         },
         { upsert: true }

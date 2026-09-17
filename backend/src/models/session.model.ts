@@ -2,7 +2,7 @@ import mongoose, { Types } from "mongoose";
 
 export interface ISession {
     course: mongoose.Types.ObjectId;
-    lecturer: mongoose.Types.ObjectId;
+    createdBy: mongoose.Types.ObjectId;
     date: Date;
     code: string;
     isActive: boolean;
@@ -17,10 +17,9 @@ const sessionSchema = new mongoose.Schema<ISession>({
         ref: "Course",
         required: true
     },
-    lecturer: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Lecturer",
-        required: true
+        ref: "Admin"
     },
     date: {
         type: Date,

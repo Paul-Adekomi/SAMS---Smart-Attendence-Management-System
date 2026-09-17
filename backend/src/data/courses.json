@@ -3,108 +3,120 @@
         "courseTitle": "Introduction to Programming",
         "courseCode": "CSC101",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Computer Science",
-        "lecturerId": "LEC001"
+        "department": "Computer Science"
     },
     {
         "courseTitle": "Data Structures & Algorithms",
         "courseCode": "CSC102",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "second",
-        "department": "Computer Science",
-        "lecturerId": "LEC001"
+        "department": "Computer Science"
     },
     {
         "courseTitle": "Circuit Theory",
         "courseCode": "EEE101",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Electrical Engineering",
-        "lecturerId": "LEC002"
+        "department": "Electrical Engineering"
     },
     {
         "courseTitle": "Digital Systems",
         "courseCode": "EEE201",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Electrical Engineering",
-        "lecturerId": "LEC002"
+        "department": "Electrical Engineering"
     },
     {
         "courseTitle": "Motion Theory",
         "courseCode": "MEE102",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "second",
-        "department": "Mechanical Engineering",
-        "lecturerId": "LEC003"
+        "department": "Mechanical Engineering"
     },
     {
         "courseTitle": "Machine Design",
         "courseCode": "MEC301",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Mechanical Engineering",
-        "lecturerId": "LEC003"
+        "department": "Mechanical Engineering"
     },
     {
         "courseTitle": "Operating Systems",
         "courseCode": "CSC301",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Computer Science",
-        "lecturerId": "LEC004"
+        "department": "Computer Science"
     },
     {
         "courseTitle": "Database Systems",
         "courseCode": "CSC201",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Computer Science",
-        "lecturerId": "LEC004"
+        "department": "Computer Science"
     },
     {
         "courseTitle": "Material Science",
         "courseCode": "MEC202",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Mechanical Engineering",
-        "lecturerId": "LEC005"
+        "department": "Mechanical Engineering"
     },
     {
         "courseTitle": "Thermodynamics",
         "courseCode": "MEC102",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Mechanical Engineering",
-        "lecturerId": "LEC005"
+        "department": "Mechanical Engineering"
     },
     {
         "courseTitle": "Control Systems",
         "courseCode": "EEE202",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Electrical Engineering",
-        "lecturerId": "LEC006"
+        "department": "Electrical Engineering"
     },
     {
         "courseTitle": "Power Systems",
         "courseCode": "EEE301",
         "creditUnit": 3,
-        "level": ["ND3"],
+        "level": [
+            "ND3"
+        ],
         "semester": "first",
-        "department": "Electrical Engineering",
-        "lecturerId": "LEC006"
+        "department": "Electrical Engineering"
     }
 ]

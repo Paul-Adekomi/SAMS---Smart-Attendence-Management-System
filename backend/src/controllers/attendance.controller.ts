@@ -53,7 +53,7 @@ export const markAttendance = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// Get attendance list for a session (for the lecturer's live view)
+// Get attendance list for a session (for the admin's live view)
 export const getSessionAttendance = async (req: AuthRequest, res: Response) => {
   try {
     const { sessionId } = req.params;
@@ -64,18 +64,6 @@ export const getSessionAttendance = async (req: AuthRequest, res: Response) => {
       time: new Date(a.createdAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     }));
     res.json(data);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Student's own attendance history
-export const getMyHistory = async (req: AuthRequest, res: Response) => {
-  try {
-    const records = await Attendance.find({ student: req.user.id })
-      .populate({ path: "session", populate: { path: "course" } })
-      .sort({ createdAt: -1 });
-    res.json(records);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

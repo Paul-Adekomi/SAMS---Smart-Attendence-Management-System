@@ -5,13 +5,11 @@ import dotenv from "dotenv";
 
 import { Department } from "../models/department.model";
 import { Course } from "../models/course.model";
-import { Lecturer } from "../models/lecturer.model";
 import { Student } from "../models/student.model";
 import { Admin } from "../models/admin.model";
 
 import departmentsData from '../data/departments.json';
 import coursesData from '../data/courses.json';
-import lecturersData from '../data/lecturers.json';
 import studentsData from '../data/students.json';
 import adminsData from '../data/admins.json';
 
@@ -45,6 +43,7 @@ export const seedDatabase = async () => {
                 {
                     $set: {
                         fullName: stu.fullName,
+                        email: stu.email,
                         password: hashedPassword,
                         matricNo: stu.matricNo,
                         department: department._id,
@@ -54,32 +53,6 @@ export const seedDatabase = async () => {
             )
         };
         console.log("🌱 Students seeded✅");
-
-
-        for (const lec of lecturersData) {
-            const department = await Department.findOne({
-                name: lec.department,
-            });
-
-            if (!department) continue;
-
-            const hashedPassword = await bcrypt.hash(lec.password, 10);
-
-           await Lecturer.updateOne(
-                { lecturerId: lec.lecturerId },
-                {
-                    $set: {
-                        fullName: lec.fullName,
-                        password: hashedPassword,
-                        lecturerId: lec.lecturerId,
-                        department: department._id,
-                    }
-                },
-                { upsert: true }
-            );
-
-        }
-        console.log("🌱 Lecturers seeded✅");
 
         for (const adm of adminsData) {
             const hashedPassword = await bcrypt.hash(adm.password, 10);
@@ -103,11 +76,7 @@ export const seedDatabase = async () => {
                 name: course.department,
             });
 
-            const lecturer = await Lecturer.findOne({
-                lecturerId: course.lecturerId,
-            });
-
-            if (!department || !lecturer) continue;
+            if (!department) continue;
 
             await Course.updateOne(
                 { courseCode: course.courseCode },
@@ -118,7 +87,6 @@ export const seedDatabase = async () => {
                         semester: course.semester,
                         level: course.level,
                         department: department._id,
-                        lecturer: lecturer._id,
                     },
                 },
                 { upsert: true }
@@ -126,7 +94,7 @@ export const seedDatabase = async () => {
         }
         console.log("🌱 Courses seeded✅");
         console.log("🌱 Database seeded successfully ✅");
-        process.exit(1);
+        process.exit(0);
     } catch (error) {
         console.error(error);
         process.exit(1);

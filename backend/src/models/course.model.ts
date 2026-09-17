@@ -7,8 +7,7 @@ export interface ICourse {
     creditUnit: number;
     semester: "first" | "second";
     level: [string];
-    department: mongoose.Schema.Types.ObjectId;
-    lecturer: mongoose.Schema.Types.ObjectId;
+    department: mongoose.Types.ObjectId;
     isActive: boolean;
 }
 
@@ -36,10 +35,6 @@ const courseSchema = new Schema<ICourse>({
     level:{
         type: [String],
         trim: true,
-    },
-    lecturer:{
-        type: Schema.Types.ObjectId,
-        ref: "Lecturer"
     },
     semester:{
         type: String

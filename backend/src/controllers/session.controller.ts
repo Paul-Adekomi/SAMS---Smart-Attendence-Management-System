@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Session } from "../models/session.model";
 import { Course } from "../models/course.model";
+import { Student } from "../models/student.model";
 import { Attendance } from "../models/attendance.model";
 import { generateSessionCode } from "../utils/generateCode";
 import QRCode from 'qrcode';
@@ -9,15 +10,13 @@ export interface AuthRequest extends Request {
     user?: any
 }
 
+// Admin starts a new attendance session for a course
 export const createSession = async (req: AuthRequest, res: Response) => {
     try {
         const { courseId, duration } = req.body;
 
         const course = await Course.findById(courseId);
         if (!course) return res.status(404).json({ message: 'Course not found' });
-
-        if (req.user.id.toString() !== course.lecturer.toString())
-            return res.status(403).json({ message: 'You are not assigned to this course' });
 
         if (!duration) return res.status(400).json({ message: "Duration is required" });
         if (duration < 1 || duration > 120)
@@ -28,7 +27,7 @@ export const createSession = async (req: AuthRequest, res: Response) => {
 
         const session = await Session.create({
             course: courseId,
-            lecturer: req.user.id,
+            createdBy: req.user.id,
             code,
             expiresAt,
             semester: course.semester,
@@ -51,21 +50,22 @@ export const createSession = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const getActiveSessions = async (req: AuthRequest, res: Response) => {
+export const getActiveSessions = async (_req: AuthRequest, res: Response) => {
     try {
         const sessions = await Session.find({
             expiresAt: { $gt: new Date() }
-        }).populate("course").populate("lecturer");
+        }).populate("course");
         res.json(sessions);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 };
 
+// Used by a student who typed a PIN instead of scanning the QR code
 export const getSessionByCode = async (req: AuthRequest, res: Response) => {
     try {
         const { code } = req.body;
-        const session = await Session.findOne({ 
+        const session = await Session.findOne({
             code: code.toUpperCase(),
             expiresAt: { $gt: new Date() }
         });
@@ -76,21 +76,24 @@ export const getSessionByCode = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const getLecturerCourses = async (req: AuthRequest, res: Response) => {
+// All courses, for the admin's "start a session" dropdown
+export const getCourses = async (_req: AuthRequest, res: Response) => {
     try {
-        const courses = await Course.find({ lecturer: req.user.id });
+        const courses = await Course.find().populate('department').sort({ courseCode: 1 });
         res.json(courses);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// New feature: Attendance reports for a lecturer — all sessions with attendance counts
-export const getLecturerReports = async (req: AuthRequest, res: Response) => {
+// All sessions (current + past), with attendance counts — the admin's session history
+export const getAllSessions = async (req: AuthRequest, res: Response) => {
     try {
-        const sessions = await Session.find({ lecturer: req.user.id })
-            .populate('course')
-            .sort({ createdAt: -1 });
+        const { courseId } = req.query as { courseId?: string };
+        const query: any = {};
+        if (courseId) query.course = courseId;
+
+        const sessions = await Session.find(query).populate('course').sort({ createdAt: -1 });
 
         const reports = await Promise.all(sessions.map(async (session: any) => {
             const count = await Attendance.countDocuments({ session: session._id, status: 'present' });
@@ -111,7 +114,7 @@ export const getLecturerReports = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// Get detailed attendance list for a specific session
+// Detailed "who was present" list for a specific session
 export const getSessionAttendanceReport = async (req: AuthRequest, res: Response) => {
     try {
         const { sessionId } = req.params;
@@ -119,16 +122,12 @@ export const getSessionAttendanceReport = async (req: AuthRequest, res: Response
         const session = await Session.findById(sessionId).populate('course') as any;
         if (!session) return res.status(404).json({ message: 'Session not found' });
 
-        // Only the lecturer who owns it can view the report
-        if (session.lecturer.toString() !== req.user.id.toString()) {
-            return res.status(403).json({ message: 'Access denied' });
-        }
-
         const records = await Attendance.find({ session: sessionId, status: 'present' })
             .populate('student')
             .sort({ createdAt: 1 }) as any[];
 
         const data = records.map((a) => ({
+            studentId: a.student?._id,
             studentName: a.student?.fullName || 'Unknown',
             matricNo: a.student?.matricNo || '',
             time: new Date(a.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
@@ -141,6 +140,69 @@ export const getSessionAttendanceReport = async (req: AuthRequest, res: Response
             totalPresent: data.length,
             students: data,
         });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Full roster for a session: every active student in the course's department,
+// each tagged with their current status for that session (present / absent / unmarked).
+// This backs the admin's manual roll-call view.
+export const getSessionRoster = async (req: AuthRequest, res: Response) => {
+    try {
+        const { sessionId } = req.params;
+
+        const session = await Session.findById(sessionId).populate('course') as any;
+        if (!session) return res.status(404).json({ message: 'Session not found' });
+
+        const departmentId = session.course?.department;
+        const students = await Student.find({ department: departmentId, isActive: true }).sort({ fullName: 1 });
+
+        const records = await Attendance.find({ session: sessionId });
+        const statusByStudent = new Map(records.map((r: any) => [r.student.toString(), r.status]));
+
+        const roster = students.map((s: any) => ({
+            studentId: s._id,
+            fullName: s.fullName,
+            matricNo: s.matricNo,
+            status: statusByStudent.get(s._id.toString()) || 'unmarked',
+        }));
+
+        res.json({
+            sessionId,
+            courseTitle: session.course?.courseTitle,
+            courseCode: session.course?.courseCode,
+            isExpired: new Date() > session.expiresAt,
+            roster,
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Admin manually marks or updates a student's attendance for a session
+export const setAttendanceStatus = async (req: AuthRequest, res: Response) => {
+    try {
+        const { sessionId, studentId } = req.params;
+        const { status } = req.body;
+
+        if (!['present', 'absent'].includes(status)) {
+            return res.status(400).json({ message: "status must be 'present' or 'absent'" });
+        }
+
+        const session = await Session.findById(sessionId);
+        if (!session) return res.status(404).json({ message: 'Session not found' });
+
+        const student = await Student.findById(studentId);
+        if (!student) return res.status(404).json({ message: 'Student not found' });
+
+        const attendance = await Attendance.findOneAndUpdate(
+            { session: sessionId, student: studentId },
+            { $set: { status } },
+            { upsert: true, new: true }
+        );
+
+        res.json({ message: 'Attendance updated', attendance });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
